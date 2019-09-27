@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qst.mapper.UserMapper">
+  <resultMap id="BaseResultMap" type="com.qst.entity.User">
+    <id column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="user_password" jdbcType="VARCHAR" property="userPassword" />
+    <result column="used_size" jdbcType="INTEGER" property="usedSize" />
+    <result column="total_size" jdbcType="INTEGER" property="totalSize" />
+    <result column="create_datetime" jdbcType="TIMESTAMP" property="createDatetime" />
+    <result column="latest_login_datetime" jdbcType="TIMESTAMP" property="latestLoginDatetime" />
+    <result column="latest_login_ip" jdbcType="VARCHAR" property="latestLoginIp" />
+    <result column="person_id" jdbcType="INTEGER" property="personId" />
+    <result column="user_status" jdbcType="INTEGER" property="userStatus" />
+    <result column="member_order" jdbcType="INTEGER" property="memberOrder" />
+
+    <!--配置一对一关联映射-->
+    <association property="person" column="person_id"
+                 select="com.qst.mapper.PersonMapper.selectByPrimaryKey"
+                 javaType="com.qst.entity.Person">
+    </association>
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    user_id, user_name, user_password, used_size, total_size, create_datetime,
+    latest_login_datetime, latest_login_ip, person_id, user_status, member_order
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user_inf
+    where user_id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="searchTypeCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    select count(*) from user_inf
+    where
+    <choose>
+      <when test="status==4">
+        user_status in (1,2)
+      </when>
+      <otherwise>
+        user_status = #{status,jdbcType=INTEGER}
+      </otherwise>
+    </choose>
+  </select>
+
+  <select id="fuzzySearchTypeCount" resultType="java.lang.Integer">
+    select count(*) from user_inf
+    where  user_name like '%${key}%' and
+    <choose>
+      <when test="status==4">
+        user_status in (1,2)
+      </when>
+      <otherwise>
+        user_status = #{status,jdbcType=INTEGER}
+      </otherwise>
+    </choose>
+  </select>
+
+  <select id="fuzzySearchByPage" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from user_inf
+    where  user_name like concat('%',#{key,jdbcType=VARCHAR},'%') and
+    <choose>
+      <when test="status==4">
+        user_status in (1,2)
+      </when>
+      <otherwise>
+        user_status = #{status,jdbcType=INTEGER}
+      </otherwise>
+    </choose>
+    order by user_id
+    limit #{start,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByPage" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from user_inf
+    where
+    <choose>
+      <when test="status==4">
+        user_status in (1,2)
+      </when>
+      <otherwise>
+        user_status = #{status,jdbcType=INTEGER}
+      </otherwise>
+    </choose>
+    order by user_id
+    limit #{start,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    update user_inf set user_status = 3
+    where user_id = #{userId,jdbcType=INTEGER}
+  </delete>
+
+  <delete id="resetUserById" parameterType="java.lang.Integer">
+    delete from user_inf where user_id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <delete id="deleteMany" parameterType="java.lang.Integer">
+     update  user_inf set user_status = 3  where 1>2 or  user_id in
+    <foreach collection="array" item="userId" open="(" separator="," close=")">
+          #{userId}
+    </foreach>
+  </delete>
+
+  <insert id="insert" parameterType="com.qst.entity.User">
+    insert into user_inf (user_id, user_name, user_password,
+                          used_size, total_size, create_datetime,
+                          latest_login_datetime, latest_login_ip,
+                          person_id, user_status, member_order
+    )
+    values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{userPassword,jdbcType=VARCHAR},
+            #{usedSize,jdbcType=INTEGER}, #{totalSize,jdbcType=INTEGER}, #{createDatetime,jdbcType=TIMESTAMP},
+            #{latestLoginDatetime,jdbcType=TIMESTAMP}, #{latestLoginIp,jdbcType=VARCHAR},
+            #{personId,jdbcType=INTEGER}, #{userStatus,jdbcType=INTEGER}, #{memberOrder,jdbcType=INTEGER}
+           )
+  </insert>
+
+
+  <insert id="insertSelective" parameterType="com.qst.entity.User"
+          useGeneratedKeys="true" keyProperty="userId">
+    insert into user_inf
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="userName != null">
+        user_name,
+      </if>
+      <if test="userPassword != null">
+        user_password,
+      </if>
+      <if test="usedSize != null">
+        used_size,
+      </if>
+      <if test="totalSize != null">
+        total_size,
+      </if>
+      <if test="createDatetime != null">
+        create_datetime,
+      </if>
+      <if test="latestLoginDatetime != null">
+        latest_login_datetime,
+      </if>
+      <if test="latestLoginIp != null">
+        latest_login_ip,
+      </if>
+      <if test="personId != null">
+        person_id,
+      </if>
+      <if test="userStatus != null">
+        user_status,
+      </if>
+      <if test="memberOrder != null">
+        member_order,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPassword != null">
+        #{userPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="usedSize != null">
+        #{usedSize,jdbcType=INTEGER},
+      </if>
+      <if test="totalSize != null">
+        #{totalSize,jdbcType=INTEGER},
+      </if>
+      <if test="createDatetime != null">
+        #{createDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="latestLoginDatetime != null">
+        #{latestLoginDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="latestLoginIp != null">
+        #{latestLoginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="personId != null">
+        #{personId,jdbcType=INTEGER},
+      </if>
+      <if test="userStatus != null">
+        #{userStatus,jdbcType=INTEGER},
+      </if>
+      <if test="memberOrder != null">
+        #{memberOrder,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.qst.entity.User">
+    update user_inf
+    <set>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPassword != null">
+        user_password = #{userPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="usedSize != null">
+        used_size = #{usedSize,jdbcType=INTEGER},
+      </if>
+      <if test="totalSize != null">
+        total_size = #{totalSize,jdbcType=INTEGER},
+      </if>
+      <if test="createDatetime != null">
+        create_datetime = #{createDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="latestLoginDatetime != null">
+        latest_login_datetime = #{latestLoginDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="latestLoginIp != null">
+        latest_login_ip = #{latestLoginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="personId != null">
+        person_id = #{personId,jdbcType=INTEGER},
+      </if>
+      <if test="userStatus != null">
+        user_status = #{userStatus,jdbcType=INTEGER},
+      </if>
+      <if test="memberOrder != null">
+        member_order = #{memberOrder,jdbcType=INTEGER},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qst.entity.User">
+    update user_inf
+    set user_name = #{userName,jdbcType=VARCHAR},
+        user_password = #{userPassword,jdbcType=VARCHAR},
+        used_size = #{usedSize,jdbcType=INTEGER},
+        total_size = #{totalSize,jdbcType=INTEGER},
+        create_datetime = #{createDatetime,jdbcType=TIMESTAMP},
+        latest_login_datetime = #{latestLoginDatetime,jdbcType=TIMESTAMP},
+        latest_login_ip = #{latestLoginIp,jdbcType=VARCHAR},
+        person_id = #{personId,jdbcType=INTEGER},
+        user_status = #{userStatus,jdbcType=INTEGER},
+        member_order = #{memberOrder,jdbcType=INTEGER}
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+
+  <!-- ajax判断是否可以使用该账户 -->
+  <select id="judgeUser" parameterType="string" resultType="string">
+    select user_name from user_inf where user_name = #{name}
+  </select>
+
+  <select id="selectIdByName" resultMap="loginMap">
+    select *from user_inf where user_name = #{name}
+  </select>
+
+  <resultMap type="com.qst.entity.User" id="loginMap">
+    <id column="user_id" property="userId"/>
+    <result column="user_password" property="userPassword"/>
+    <result column="user_name" property="userName"/>
+    <result column="used_size" property="usedSize"/>
+    <result column="total_size" property="totalSize"/>
+    <result column="create_datetime" property="createDatetime"/>
+    <result column="user_status" property="userStatus"/>
+    <result column="member_order" property="memberOrder"/>
+    <result column="person_id" property="personId"/>
+  </resultMap>
+
+</mapper>

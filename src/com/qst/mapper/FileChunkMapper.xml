@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qst.mapper.FileChunkMapper">
+  <resultMap id="BaseResultMap" type="com.qst.entity.FileChunk">
+    <id column="file_chunk_id" jdbcType="INTEGER" property="fileChunkId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="file_name" jdbcType="VARCHAR" property="fileName" />
+    <result column="chunks" jdbcType="INTEGER" property="chunks" />
+    <result column="chunk" jdbcType="INTEGER" property="chunk" />
+    <result column="file_path" jdbcType="VARCHAR" property="filePath" />
+    <result column="file_md5" jdbcType="VARCHAR" property="fileMd5" />
+    <result column="chunk_size" jdbcType="INTEGER" property="chunkSize" />
+    <result column="file_status" jdbcType="INTEGER" property="fileStatus" />
+    <result column="percentage" jdbcType="INTEGER" property="percentage" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    file_chunk_id, user_id, file_name, chunks, chunk, file_path, file_md5, chunk_size, 
+    file_status, percentage
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from file_chunk_inf
+    where file_chunk_id = #{fileChunkId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from file_chunk_inf
+    where file_chunk_id = #{fileChunkId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.qst.entity.FileChunk">
+    insert into file_chunk_inf (file_chunk_id, user_id, file_name, 
+      chunks, chunk, file_path, 
+      file_md5, chunk_size, file_status, 
+      percentage)
+    values (#{fileChunkId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{fileName,jdbcType=VARCHAR}, 
+      #{chunks,jdbcType=INTEGER}, #{chunk,jdbcType=INTEGER}, #{filePath,jdbcType=VARCHAR}, 
+      #{fileMd5,jdbcType=VARCHAR}, #{chunkSize,jdbcType=INTEGER}, #{fileStatus,jdbcType=INTEGER}, 
+      #{percentage,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.qst.entity.FileChunk">
+    insert into file_chunk_inf
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="fileChunkId != null">
+        file_chunk_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="fileName != null">
+        file_name,
+      </if>
+      <if test="chunks != null">
+        chunks,
+      </if>
+      <if test="chunk != null">
+        chunk,
+      </if>
+      <if test="filePath != null">
+        file_path,
+      </if>
+      <if test="fileMd5 != null">
+        file_md5,
+      </if>
+      <if test="chunkSize != null">
+        chunk_size,
+      </if>
+      <if test="fileStatus != null">
+        file_status,
+      </if>
+      <if test="percentage != null">
+        percentage,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="fileChunkId != null">
+        #{fileChunkId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="fileName != null">
+        #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="chunks != null">
+        #{chunks,jdbcType=INTEGER},
+      </if>
+      <if test="chunk != null">
+        #{chunk,jdbcType=INTEGER},
+      </if>
+      <if test="filePath != null">
+        #{filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="fileMd5 != null">
+        #{fileMd5,jdbcType=VARCHAR},
+      </if>
+      <if test="chunkSize != null">
+        #{chunkSize,jdbcType=INTEGER},
+      </if>
+      <if test="fileStatus != null">
+        #{fileStatus,jdbcType=INTEGER},
+      </if>
+      <if test="percentage != null">
+        #{percentage,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qst.entity.FileChunk">
+    update file_chunk_inf
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="fileName != null">
+        file_name = #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="chunks != null">
+        chunks = #{chunks,jdbcType=INTEGER},
+      </if>
+      <if test="chunk != null">
+        chunk = #{chunk,jdbcType=INTEGER},
+      </if>
+      <if test="filePath != null">
+        file_path = #{filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="fileMd5 != null">
+        file_md5 = #{fileMd5,jdbcType=VARCHAR},
+      </if>
+      <if test="chunkSize != null">
+        chunk_size = #{chunkSize,jdbcType=INTEGER},
+      </if>
+      <if test="fileStatus != null">
+        file_status = #{fileStatus,jdbcType=INTEGER},
+      </if>
+      <if test="percentage != null">
+        percentage = #{percentage,jdbcType=INTEGER},
+      </if>
+    </set>
+    where file_chunk_id = #{fileChunkId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qst.entity.FileChunk">
+    update file_chunk_inf
+    set user_id = #{userId,jdbcType=INTEGER},
+      file_name = #{fileName,jdbcType=VARCHAR},
+      chunks = #{chunks,jdbcType=INTEGER},
+      chunk = #{chunk,jdbcType=INTEGER},
+      file_path = #{filePath,jdbcType=VARCHAR},
+      file_md5 = #{fileMd5,jdbcType=VARCHAR},
+      chunk_size = #{chunkSize,jdbcType=INTEGER},
+      file_status = #{fileStatus,jdbcType=INTEGER},
+      percentage = #{percentage,jdbcType=INTEGER}
+    where file_chunk_id = #{fileChunkId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByStatus"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from file_chunk_inf
+    where file_status = #{status} and user_id = #{userId}
+  </select>
+</mapper>

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qst.mapper.DirectoryMapper">
+  <resultMap id="BaseResultMap" type="com.qst.entity.Directory">
+    <id column="directory_id" jdbcType="INTEGER" property="directoryId" />
+    <result column="directory_name" jdbcType="VARCHAR" property="directoryName" />
+    <result column="parent_id" jdbcType="INTEGER" property="parentId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="create_datetime" jdbcType="TIMESTAMP" property="createDatetime" />
+     <result column="directory_status" jdbcType="INTEGER" property="directoryStatus" />
+  </resultMap>  
+  <sql id="Base_Column_List">
+    directory_id, directory_name, parent_id, user_id, create_datetime,directory_status  
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap"> 
+    select 
+    <include refid="Base_Column_List" />
+    from directory_inf
+    where directory_id = #{directoryId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from directory_inf
+    where directory_id = #{directoryId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.qst.entity.Directory">
+    insert into directory_inf (directory_id, directory_name, parent_id, 
+      user_id, create_datetime,directory_status)
+    values (#{directoryId,jdbcType=INTEGER}, #{directoryName,jdbcType=VARCHAR}, #{parentId,jdbcType=INTEGER}, 
+      #{userId,jdbcType=INTEGER}, #{createDatetime,jdbcType=TIMESTAMP},#{directoryStatus,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.qst.entity.Directory">
+    insert into directory_inf
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="directoryId != null">
+        directory_id,
+      </if>
+      <if test="directoryName != null">
+        directory_name,
+      </if>
+      <if test="parentId != null">
+        parent_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="createDatetime != null">
+        create_datetime,
+      </if>
+        <if test="directoryStatus != null">
+       directory_status
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="directoryId != null">
+        #{directoryId,jdbcType=INTEGER},
+      </if>
+      <if test="directoryName != null">
+        #{directoryName,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null">
+        #{parentId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="createDatetime != null">
+        #{createDatetime,jdbcType=TIMESTAMP},
+      </if> 
+      <if test="directoryStatus!= null">
+       #{directoryStatus,jdbcType=INTEGER},
+      </if>
+      
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qst.entity.Directory">
+    update directory_inf
+    <set>
+      <if test="directoryName != null">
+        directory_name = #{directoryName,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null">
+        parent_id = #{parentId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="createDatetime != null">
+        create_datetime = #{createDatetime,jdbcType=TIMESTAMP},
+      </if>
+       <if test="directoryStatus!= null">  
+     directory_status= #{directoryStatus,jdbcType=INTEGER},  
+      </if>
+    </set>
+    where directory_id = #{directoryId,jdbcType=INTEGER} 
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qst.entity.Directory">
+    update directory_inf
+    set directory_name = #{directoryName,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
+      create_datetime = #{createDatetime,jdbcType=TIMESTAMP},
+       directory_status = #{directoryStatus,jdbcType=INTEGER}
+      
+    where directory_id = #{directoryId,jdbcType=INTEGER}
+  </update>
+  <!-- 分页模糊查找我的文件夹 -->
+  <select id="fuzzyFindMyDirectorys" resultMap="BaseResultMap">
+  	select * from directory_inf
+  	<where>
+  	<if test="dir.directoryName != null">
+  	and directory_name like concat('%',#{dir.directoryName},'%')
+  	</if>
+  	<if test="dir.userId != null">
+  	and user_id=#{dir.userId}
+  	</if>
+  	</where>
+  	and directory_status=1 order by create_datetime desc
+  	<if test="pg.page!=null and pg.pageSize!=null">
+    limit #{pg.page},#{pg.pageSize} 
+    </if>
+  </select>
+ <!-- ——————————————————  用户文件管理 start——————————————————-->
+<!--  查询子目录 -->
+   <select id="findChidrenById"  resultMap="BaseResultMap"> 
+    select * from directory_inf where parent_id=#{parentId} and  user_id=#{userId}  and  directory_status=1  
+  </select>
+    <!--  目录下已删除文件夹 -->
+   <select id="alreadyDeleteDirById"  resultMap="BaseResultMap"> 
+    select * from directory_inf where parent_id=#{dirId} and  directory_status=3 
+  </select> 
+  <select id="findAllByUser"  resultMap="BaseResultMap"> 
+    select * from directory_inf where user_id=#{uId}  and  directory_status=1  
+  </select>
+  <!-- 添加文件夹 -->
+  <select id="selectDirByName"  resultMap="BaseResultMap">  
+    select * from directory_inf where directory_name=#{dirName} and  user_id=#{uId} and parent_id=#{pId} and  directory_status=1  
+  </select>
+   <select id="findRecycleDir"  resultMap="BaseResultMap"> 
+    select * from directory_inf where user_id=#{userId}  and  directory_status=3  
+  </select>
+  
+  <!-- ——————————————————  用户文件管理 end——————————————————-->
+</mapper>

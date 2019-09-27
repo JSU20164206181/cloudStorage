@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qst.mapper.PersonMapper">
+  <resultMap id="BaseResultMap" type="com.qst.entity.Person">
+    <id column="person_id" jdbcType="INTEGER" property="personId" />
+    <result column="real_name" jdbcType="VARCHAR" property="realName" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="introduction" jdbcType="VARCHAR" property="introduction" />
+    <result column="picture" jdbcType="VARCHAR" property="picture" />
+    <result column="create_datetime" jdbcType="TIMESTAMP" property="createDatetime" />
+    <result column="sex" jdbcType="VARCHAR" property="sex" />
+    <result column="age" jdbcType="INTEGER" property="age" />
+  </resultMap>
+
+  <resultMap id="myResultMap" type="com.qst.entity.SexInfo">
+    <result column="sum" property="sum" jdbcType="INTEGER"/>
+    <result column="man" property="manNum" jdbcType="INTEGER"/>
+    <result column="woman" property="woMn" jdbcType="INTEGER"/>
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    person_id, real_name, email, phone, introduction, picture, create_datetime, sex, 
+    age
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from person_inf
+    where person_id = #{personId,jdbcType=INTEGER}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from person_inf
+    where person_id = #{personId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.qst.entity.Person">
+    insert into person_inf (person_id, real_name, email, 
+      phone, introduction, picture, 
+      create_datetime, sex, age
+      )
+    values (#{personId,jdbcType=INTEGER}, #{realName,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=VARCHAR}, #{introduction,jdbcType=VARCHAR}, #{picture,jdbcType=VARCHAR}, 
+      #{createDatetime,jdbcType=TIMESTAMP}, #{sex,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}
+      )
+  </insert>
+
+  <select id="searchSex" resultMap="myResultMap">
+    select count(*) as sum,count(sex='男' or null) as man,count(sex='女' or null) as woman from person_inf where 1=1;
+  </select>
+
+  <select id="searchAge" resultType="com.qst.entity.AgeInfo">
+    select count(age between 1 and 6 or null) as child,
+           count(age between 7 and 17 or null) as young,
+           count(age between 18 and 40 or null) as youth,
+           count(age between 41 and 45 or null) as middle,
+           count(*) as sum,
+           count(age >=66 or null) as old from person_inf;
+  </select>
+
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="personId" parameterType="com.qst.entity.Person">
+
+    insert into person_inf
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="personId != null">
+        person_id,
+      </if>
+      <if test="realName != null">
+        real_name,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="introduction != null">
+        introduction,
+      </if>
+      <if test="picture != null">
+        picture,
+      </if>
+      <if test="createDatetime != null">
+        create_datetime,
+      </if>
+      <if test="sex != null">
+        sex,
+      </if>
+      <if test="age != null">
+        age,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="personId != null">
+        #{personId,jdbcType=INTEGER},
+      </if>
+      <if test="realName != null">
+        #{realName,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="introduction != null">
+        #{introduction,jdbcType=VARCHAR},
+      </if>
+      <if test="picture != null">
+        #{picture,jdbcType=VARCHAR},
+      </if>
+      <if test="createDatetime != null">
+        #{createDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sex != null">
+        #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="age != null">
+        #{age,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qst.entity.Person">
+    update person_inf
+    <set>
+      <if test="realName != null">
+        real_name = #{realName,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="introduction != null">
+        introduction = #{introduction,jdbcType=VARCHAR},
+      </if>
+      <if test="picture != null">
+        picture = #{picture,jdbcType=VARCHAR},
+      </if>
+      <if test="createDatetime != null">
+        create_datetime = #{createDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sex != null">
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="age != null">
+        age = #{age,jdbcType=INTEGER},
+      </if>
+    </set>
+    where person_id = #{personId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qst.entity.Person">
+    update person_inf
+    set real_name = #{realName,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      introduction = #{introduction,jdbcType=VARCHAR},
+      picture = #{picture,jdbcType=VARCHAR},
+      create_datetime = #{createDatetime,jdbcType=TIMESTAMP},
+      sex = #{sex,jdbcType=VARCHAR},
+      age = #{age,jdbcType=INTEGER}
+    where person_id = #{personId,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectAll" resultMap="BaseResultMap">
+     select *from person_inf;
+  </select>
+  
+  <select id="findIdByEmail" resultType="Integer">
+      select person_id from person_inf where email = #{eamil};
+  </select>
+  
+</mapper>

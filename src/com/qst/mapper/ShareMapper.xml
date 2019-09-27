@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qst.mapper.ShareMapper">
+  <resultMap id="BaseResultMap" type="com.qst.entity.Share">
+    <id column="share_id" jdbcType="INTEGER" property="shareId" />
+    <result column="share_url" jdbcType="VARCHAR" property="shareUrl" />
+    <result column="share_name" jdbcType="VARCHAR" property="shareName" />
+    <result column="create_datetime" jdbcType="TIMESTAMP" property="createDatetime" />
+    <result column="valid_date" jdbcType="INTEGER" property="validDate" />
+    <result column="file_id" jdbcType="VARCHAR" property="fileId" />
+    <result column="directory_id" jdbcType="VARCHAR" property="directoryId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="person_id" jdbcType="INTEGER" property="personId" />
+    <result column="share_status" jdbcType="INTEGER" property="shareStatus" />
+    <result column="share_command" jdbcType="VARCHAR" property="shareCommand" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    share_id, share_url, share_name, create_datetime, valid_date, file_id, directory_id, user_id, user_name, person_id, share_status, share_command
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from share_inf
+    where share_id = #{shareId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from share_inf
+    where share_id = #{shareId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.qst.entity.Share">
+    insert into share_inf (share_id, share_url, share_name, 
+      create_datetime, valid_date, file_id, directory_id, 
+      user_id, user_name, person_id, share_status, 
+      share_command)
+    values (#{shareId,jdbcType=INTEGER}, #{shareUrl,jdbcType=VARCHAR}, #{shareName,jdbcType=VARCHAR}, 
+      #{createDatetime,jdbcType=TIMESTAMP}, #{validDate,jdbcType=INTEGER}, #{fileId,jdbcType=VARCHAR}, 
+      #{directoryId,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{userName,jdbcType=INTEGER}, 
+      #{personId,jdbcType=INTEGER}, #{shareStatus,jdbcType=INTEGER},#{shareCommand,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.qst.entity.Share" useGeneratedKeys="true" keyProperty="shareId">
+    insert into share_inf
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="shareId != null">
+        share_id,
+      </if>
+      <if test="shareUrl != null">
+        share_url,
+      </if>
+      <if test="shareName != null">
+        share_name,
+      </if>
+      <if test="createDatetime != null">
+        create_datetime,
+      </if>
+      <if test="validDate != null">
+        valid_date,
+      </if>
+      <if test="fileId != null">
+        file_id,
+      </if>
+      <if test="directoryId != null">
+        directory_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="userName != null">
+        user_name,
+      </if>
+      <if test="personId != null">
+        person_id,
+      </if>
+      <if test="shareStatus != null">
+        share_status,
+      </if>
+      <if test="shareCommand != null">
+        share_command,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="shareId != null">
+        #{shareId,jdbcType=INTEGER},
+      </if>
+      <if test="shareUrl != null">
+        #{shareUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="shareName != null">
+        #{shareName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDatetime != null">
+        #{createDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="validDate != null">
+        #{validDate,jdbcType=INTEGER},
+      </if>
+      <if test="fileId != null">
+        #{fileId,jdbcType=VARCHAR},
+      </if>
+      <if test="directoryId != null">
+        #{directoryId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=INTEGER},
+      </if>
+      <if test="personId != null">
+        #{personId,jdbcType=INTEGER},
+      </if>
+      <if test="shareStatus != null">
+        #{shareStatus,jdbcType=INTEGER},
+      </if>
+      <if test="shareCommand != null">
+        #{shareCommand,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qst.entity.Share">
+    update share_inf
+    <set>
+      <if test="shareUrl != null">
+        share_url = #{shareUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="shareName != null">
+        share_name = #{shareName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDatetime != null">
+        create_datetime = #{createDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="validDate != null">
+        valid_date = #{validDate,jdbcType=INTEGER},
+      </if>
+      <if test="fileId != null">
+        file_id = #{fileId,jdbcType=VARCHAR},
+      </if>
+      <if test="directoryId != null">
+        directory_id = #{directoryId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=INTEGER},
+      </if>
+      <if test="personId != null">
+        person_id = #{personId,jdbcType=INTEGER},
+      </if>
+      <if test="shareStatus != null">
+        share_status = #{shareStatus,jdbcType=INTEGER},
+      </if>
+      <if test="shareCommand != null">
+        share_command = #{shareCommand,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where share_id = #{shareId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qst.entity.Share">
+    update share_inf
+    set share_url = #{shareUrl,jdbcType=VARCHAR},
+      share_name = #{shareName,jdbcType=VARCHAR},
+      create_datetime = #{createDatetime,jdbcType=TIMESTAMP},
+      valid_date = #{validDate,jdbcType=INTEGER},
+      file_id = #{fileId,jdbcType=VARCHAR},
+      directory_id = #{directoryId,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=INTEGER},
+      user_name = #{userName,jdbcType=INTEGER},
+      person_id = #{personId,jdbcType=INTEGER},
+      share_status = #{shareStatus,jdbcType=INTEGER},
+      share_command = #{shareCommand,jdbcType=VARCHAR}
+    where share_id = #{shareId,jdbcType=INTEGER}
+  </update>
+  <!-- 管理员分页查询所有分享文件 -->
+  <select id="findAllSharesByPage" resultMap="BaseResultMap">
+  	select * from share_inf order by create_datetime desc
+  	<if test="pg.page!=null and pg.pageSize!=null">
+    limit #{pg.page},#{pg.pageSize} 
+    </if>
+  </select>
+  <!-- 管理员查询所有分页文件总数 -->
+  <select id="findSharesTotal" resultType="int">
+   	select count(*) from share_inf
+  </select>
+  <!-- 管理员根据分享文件类型分页查询文件 -->
+  <select id="findSharesByType" resultMap="BaseResultMap">
+    select * from share_inf 
+    <where>
+    <if test="share.shareStatus!=null">
+    and share_status=#{share.shareStatus} 
+    </if>
+    <if test="share.validDate!=null">
+    and valid_date=#{share.validDate}
+    </if>
+    </where>
+    order by create_datetime desc
+    <if test="pg.page!=null and pg.pageSize!=null">
+    limit #{pg.page},#{pg.pageSize} 
+    </if>
+  </select>
+  <!-- 管理员查询分享分类文件总数 -->
+  <select id="findSharesTotalByType" resultType="int">
+    select count(*) from share_inf   
+    <where>
+    <if test="share.shareStatus!=null">
+    and share_status=#{share.shareStatus} 
+    </if>
+    <if test="share.validDate!=null">
+    and valid_date=#{share.validDate}
+    </if>
+    </where>
+  </select>
+  <!-- 管理员按分享文件属性模糊查找文件 -->
+  <select id="findSharesByAttribute" resultMap="BaseResultMap">
+    select * from share_inf 
+    <if test="share.shareName!=null">
+    where share_name like concat('%',#{share.shareName},'%')
+    </if>
+    <if test="share.userName!=null">
+    where user_name like concat('%',#{share.userName},'%')
+    </if>
+    <if test="startTime!=null and endTime!=null">
+    and create_datetime between DATE_FORMAT(#{startTime},'%Y-%m-%d') and DATE_FORMAT(#{endTime},'%Y-%m-%d')
+    </if>
+    order by create_datetime desc
+    <if test="pg.page!=null and pg.pageSize!=null">
+    limit #{pg.page},#{pg.pageSize} 
+    </if>
+  </select>
+  <!-- 管理员按分享文件属性模糊查找文件总数 -->
+  <select id="findSharesTotalByAttribute" resultType="int">
+    select count(*) from share_inf 
+    <if test="share.shareName!=null">
+    where share_name like concat('%',#{share.shareName},'%')
+    </if>
+    <if test="share.userName!=null">
+    where user_name like concat('%',#{share.userName},'%')
+    </if>
+    <if test="startTime!=null and endTime!=null">
+    and create_datetime between DATE_FORMAT(#{startTime},'%Y-%m-%d') and DATE_FORMAT(#{endTime},'%Y-%m-%d')
+    </if>
+  </select>
+  <!-- 根据分享地址查询文件 -->
+  <select id="findShareByUrl" resultMap="BaseResultMap">
+  	select * from share_inf
+  	<if test="shareUrl!=null">
+  	where share_url = #{shareUrl}
+  	</if>
+  </select>
+  <!-- 查询我的分享 -->
+  <select id="findMyShares" resultMap="BaseResultMap">
+  	select * from share_inf
+  	<if test="userId!=null">
+  	where user_id = #{userId}
+  	</if>
+  </select>
+</mapper>
